@@ -1,13 +1,27 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private static PlayerController Instance;
+    public static PlayerController Instance;
 
-    [SerializeField] private CharacterPosition playerPosition;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float jumpForce;
+
+    [SerializeField] private bool isGrounded;
+    [SerializeField] private float groundCheckDistance = 0.1f;
+    [SerializeField] private LayerMask groundLayer;
+    
+    private CharacterEnums.CharacterPosition playerPosition;
+    private CharacterEnums.CharacterState playerState;
+
+    private Animator animator;
+    private Rigidbody rb;
+
+    private const float leftPositionValue = 1.3f;
+    private const float middlePositionValue = 3.8f;
+    private const float rightPositionValue = 6.3f;
 
     private void Awake()
     {
@@ -19,27 +33,40 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        playerPosition = CharacterPosition.midle;
-        ChancePosition(playerPosition);
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
+        playerState = CharacterEnums.CharacterState.run;
+        playerPosition = CharacterEnums.CharacterPosition.middle;
+        ChangePosition(playerPosition);
+        ChangeAnimationState(playerState);
     }
 
     void Update()
     {
-        Move();
+        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+        PlayerInputs();
     }
-    private void Move()
+
+    private void FixedUpdate()
+    {
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
+        if (isGrounded)
+        {
+            ChangeAnimationState(CharacterEnums.CharacterState.run);
+        }
+    }
+
+    private void PlayerInputs()
     {
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             switch (playerPosition)
             {
-                case CharacterPosition.midle:
-                    playerPosition = CharacterPosition.left;
-                    ChancePosition(playerPosition);
+                case CharacterEnums.CharacterPosition.middle:
+                    ChangePosition(CharacterEnums.CharacterPosition.left);
                     break;
-                case CharacterPosition.right:
-                    playerPosition = CharacterPosition.midle;
-                    ChancePosition(playerPosition);
+                case CharacterEnums.CharacterPosition.right:
+                    ChangePosition(CharacterEnums.CharacterPosition.middle);
                     break;
                 default:
                     break;
@@ -49,53 +76,105 @@ public class PlayerController : MonoBehaviour
         {
             switch (playerPosition)
             {
-                case CharacterPosition.left:
-                    playerPosition = CharacterPosition.midle;
-                    ChancePosition(playerPosition);
+                case CharacterEnums.CharacterPosition.left:
+                    ChangePosition(CharacterEnums.CharacterPosition.middle);
                     break;
-                case CharacterPosition.midle:
-                    playerPosition = CharacterPosition.right;
-                    ChancePosition(playerPosition);
+                case CharacterEnums.CharacterPosition.middle:
+                    ChangePosition(CharacterEnums.CharacterPosition.right);
                     break;  
                 default:
                     break;
             }
         }
+        else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            ChangeAnimationState(CharacterEnums.CharacterState.jump);
+        }  
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            ChangeAnimationState(CharacterEnums.CharacterState.slide);
+        }
     }
-    private void ChancePosition(CharacterPosition playerPosition)
+
+    private IEnumerator Slide()
+    {
+        animator.SetBool("Slide", true);
+        yield return new WaitForSeconds(0.2f);
+        animator.SetBool("Slide", false);
+    }
+
+    private void Jump()
+    {
+        rb.AddForce(transform.up * jumpForce);
+        animator.SetBool("Run", false);
+        animator.SetBool("Jump", true);
+    }
+    
+    private void ChangePosition(CharacterEnums.CharacterPosition characterPosition)
     {
         var playerPos = this.transform.position;
+        playerPosition = characterPosition;
+
+        float targetXPosition = 0f;
+
         switch (playerPosition)
         {
-            case CharacterPosition.left:
-                playerPos.x = PlayerPositionConstants.leftPositionValue;
-                this.transform.position = playerPos;
+            case CharacterEnums.CharacterPosition.left:
+                targetXPosition = leftPositionValue;
                 break;
-            case CharacterPosition.midle:
-                playerPos.x = PlayerPositionConstants.middlePositionValue;
-                this.transform.position = playerPos;
+            case CharacterEnums.CharacterPosition.middle:
+                targetXPosition = middlePositionValue;
                 break;
-            case CharacterPosition.right:
-                playerPos.x = PlayerPositionConstants.rightPositionValue;
-                this.transform.position = playerPos;
+            case CharacterEnums.CharacterPosition.right:
+                targetXPosition = rightPositionValue;
+                break;
+            default:
+                break;
+        }
+
+        playerPos.x = targetXPosition;
+        this.transform.position = playerPos;
+    }
+
+    private void ChangeAnimationState(CharacterEnums.CharacterState characterState)
+    {
+        playerState = characterState;
+
+        switch (playerState)
+        {
+            case CharacterEnums.CharacterState.idle:
+                //isplay kapat
+                break;
+            case CharacterEnums.CharacterState.run:
+                animator.SetBool("Run", true);
+                animator.SetBool("Jump", false);
+                break;
+            case CharacterEnums.CharacterState.jump:
+                if (isGrounded && !animator.GetBool("Jump"))
+                    Jump();
+                break;
+            case CharacterEnums.CharacterState.slide:
+                    StartCoroutine(Slide());
                 break;
             default:
                 break;
         }
     }
+} 
 
-}
-
-public enum CharacterPosition
+public class CharacterEnums
 {
-    left,
-    midle,
-    right
-}
-
-public class PlayerPositionConstants
-{
-    public const float leftPositionValue = 1.3f;
-    public const float middlePositionValue = 3.8f;
-    public const float rightPositionValue = 6.3f;
+    public enum CharacterPosition
+    {
+        left,
+        middle,
+        right
+    }
+    public enum CharacterState
+    {
+        idle,
+        run,
+        jump,
+        slide
+    }
 }
