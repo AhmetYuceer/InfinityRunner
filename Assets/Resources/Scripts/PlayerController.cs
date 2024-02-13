@@ -6,23 +6,25 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance;
 
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float jumpForce;
-
-    [SerializeField] private bool isGrounded;
-    [SerializeField] private float groundCheckDistance = 0.1f;
-    [SerializeField] private LayerMask groundLayer;
-    
-    private CharacterEnums.CharacterPosition playerPosition;
-    private CharacterEnums.CharacterState playerState;
-
-    private Animator animator;
-    private Rigidbody rb;
-
     private const float leftPositionValue = 1.3f;
     private const float middlePositionValue = 3.8f;
     private const float rightPositionValue = 6.3f;
 
+    private Animator animator;
+    private Rigidbody rb;
+
+    private CharacterEnums.CharacterPosition playerPosition;
+    private CharacterEnums.CharacterState playerState;
+
+    [Header("Move")]
+    [SerializeField] private float moveSpeed;
+
+    [Header("Jump")]
+    [SerializeField] private float jumpForce;
+    [SerializeField] private bool isGrounded;
+    [SerializeField] private float groundCheckDistance = 0.1f;
+    [SerializeField] private LayerMask groundLayer;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -35,6 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        
         playerState = CharacterEnums.CharacterState.run;
         playerPosition = CharacterEnums.CharacterPosition.middle;
         ChangePosition(playerPosition);
@@ -86,7 +89,7 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space))
         {
             ChangeAnimationState(CharacterEnums.CharacterState.jump);
         }  
@@ -98,16 +101,19 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator Slide()
     {
-        animator.SetBool("Slide", true);
+        animator.SetBool("Slide", true);    
         yield return new WaitForSeconds(0.2f);
         animator.SetBool("Slide", false);
     }
 
     private void Jump()
     {
-        rb.AddForce(transform.up * jumpForce);
-        animator.SetBool("Run", false);
-        animator.SetBool("Jump", true);
+        if (isGrounded && !animator.GetBool("Jump"))
+        {
+            rb.AddForce(transform.up * jumpForce);
+            animator.SetBool("Run", false);
+            animator.SetBool("Jump", true);
+        }
     }
     
     private void ChangePosition(CharacterEnums.CharacterPosition characterPosition)
@@ -131,7 +137,6 @@ public class PlayerController : MonoBehaviour
             default:
                 break;
         }
-
         playerPos.x = targetXPosition;
         this.transform.position = playerPos;
     }
@@ -150,7 +155,6 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("Jump", false);
                 break;
             case CharacterEnums.CharacterState.jump:
-                if (isGrounded && !animator.GetBool("Jump"))
                     Jump();
                 break;
             case CharacterEnums.CharacterState.slide:
