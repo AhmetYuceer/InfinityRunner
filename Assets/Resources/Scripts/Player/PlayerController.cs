@@ -15,9 +15,10 @@ public class PlayerController : MonoBehaviour
 
     private CharacterEnums.CharacterPosition playerPosition;
     private CharacterEnums.CharacterState playerState;
-
+    
     [Header("Move")]
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float speedIncreaseAmount;
 
     [Header("Jump")]
     [SerializeField] private float jumpForce;
@@ -37,7 +38,7 @@ public class PlayerController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        
+
         playerState = CharacterEnums.CharacterState.run;
         playerPosition = CharacterEnums.CharacterPosition.middle;
         ChangePosition(playerPosition);
@@ -59,6 +60,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    public void SetRigidbodyIsKinematic(bool isKinematic)
+    {
+        rb.isKinematic = isKinematic;
+    }
+
+    public float GetSpeed()
+    {
+        return moveSpeed;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        moveSpeed = speed;
+    }
+
     private void PlayerInputs()
     {
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
@@ -75,7 +92,7 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             switch (playerPosition)
             {
@@ -89,11 +106,11 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space))
+         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space))
         {
             ChangeAnimationState(CharacterEnums.CharacterState.jump);
         }  
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             ChangeAnimationState(CharacterEnums.CharacterState.slide);
         }
@@ -110,7 +127,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded && !animator.GetBool("Jump"))
         {
-            rb.AddForce(transform.up * jumpForce);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             animator.SetBool("Run", false);
             animator.SetBool("Jump", true);
         }
@@ -144,7 +161,6 @@ public class PlayerController : MonoBehaviour
     private void ChangeAnimationState(CharacterEnums.CharacterState characterState)
     {
         playerState = characterState;
-
         switch (playerState)
         {
             case CharacterEnums.CharacterState.idle:
@@ -163,6 +179,12 @@ public class PlayerController : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    //skor 100 ün katlarýna uþaltýðý zaman hýz, "speedIncreaseAmount" deðeri kadar artar
+    public void IncreaseSpeed()
+    {
+        moveSpeed += speedIncreaseAmount;
     }
 } 
 

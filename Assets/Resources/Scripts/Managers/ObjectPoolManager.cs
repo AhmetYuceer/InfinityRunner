@@ -41,7 +41,7 @@ public class ObjectPoolManager : MonoBehaviour
             {
                 GetObjectFromPool();
             }
-        }        
+        }
     }
 
     private void GetObjectFromPool()
