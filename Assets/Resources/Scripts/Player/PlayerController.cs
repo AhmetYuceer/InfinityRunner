@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -23,9 +24,12 @@ public class PlayerController : MonoBehaviour
     [Header("Jump")]
     [SerializeField] private float jumpForce;
     [SerializeField] private bool isGrounded;
-    [SerializeField] private float groundCheckDistance = 0.1f;
-    [SerializeField] private LayerMask groundLayer;
-    
+    [SerializeField] private Transform checkSpherePos;
+    [SerializeField] private float checkSphereRadius;
+    [SerializeField] private LayerMask groundMask;
+
+
+
     private void Awake()
     {
         if (Instance == null)
@@ -53,13 +57,9 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
-        if (isGrounded)
-        {
-            ChangeAnimationState(CharacterEnums.CharacterState.run);
-        }
+        isGrounded = Physics.CheckSphere(checkSpherePos.position, checkSphereRadius, groundMask);
+        animator.SetBool("isGrounded", isGrounded);
     }
-
 
     public void SetRigidbodyIsKinematic(bool isKinematic)
     {
@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             switch (playerPosition)
             {
@@ -106,33 +106,18 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space))
+        else if ( isGrounded && (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space)))
         {
             ChangeAnimationState(CharacterEnums.CharacterState.jump);
-        }  
-         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             ChangeAnimationState(CharacterEnums.CharacterState.slide);
         }
+        
     }
 
-    private IEnumerator Slide()
-    {
-        animator.SetBool("Slide", true);    
-        yield return new WaitForSeconds(0.2f);
-        animator.SetBool("Slide", false);
-    }
-
-    private void Jump()
-    {
-        if (isGrounded && !animator.GetBool("Jump"))
-        {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            animator.SetBool("Run", false);
-            animator.SetBool("Jump", true);
-        }
-    }
-    
     private void ChangePosition(CharacterEnums.CharacterPosition characterPosition)
     {
         var playerPos = this.transform.position;
@@ -171,14 +156,21 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("Jump", false);
                 break;
             case CharacterEnums.CharacterState.jump:
-                    Jump();
+                if (isGrounded)
+                {
+                    rb.AddForce(Vector3.up * jumpForce);
+                    animator.SetBool("Jump", true);
+                    animator.SetBool("Run", false);
+                }
                 break;
             case CharacterEnums.CharacterState.slide:
-                    StartCoroutine(Slide());
+                animator.SetTrigger("Slide");
                 break;
             default:
                 break;
         }
+        
+        Debug.Log(playerState);
     }
 
     //skor 100 ün katlarýna uþaltýðý zaman hýz, "speedIncreaseAmount" deðeri kadar artar
@@ -186,6 +178,7 @@ public class PlayerController : MonoBehaviour
     {
         moveSpeed += speedIncreaseAmount;
     }
+
 } 
 
 public class CharacterEnums
