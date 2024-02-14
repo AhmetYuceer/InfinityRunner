@@ -38,14 +38,13 @@ public class PlayerHealthSystem : MonoBehaviour
 
         if (currentHeartCount < 1)
         {
-            Debug.Log("ÖLdün");
             SceneManager.LoadScene(0);
         }
     }
     IEnumerator AnimateBlink()
     {
         float characterSpeed = PlayerController.Instance.GetSpeed();
-        PlayerController.Instance.SetSpeed(2f);
+        PlayerController.Instance.SetSpeed(0);
         PlayerController.Instance.SetRigidbodyIsKinematic(true);
 
         float startTime = Time.time;  

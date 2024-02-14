@@ -6,6 +6,7 @@ public class DistanceMeter : MonoBehaviour
 {
     private Transform playerTransform;
     private float distance ;
+    private float currentDistance;
     [SerializeField] private Transform meterStartingPosition;
 
     private void Start()

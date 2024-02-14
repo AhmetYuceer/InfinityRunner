@@ -16,9 +16,10 @@ public class PlayerController : MonoBehaviour
 
     private CharacterEnums.CharacterPosition playerPosition;
     private CharacterEnums.CharacterState playerState;
-    
+
     [Header("Move")]
-    [SerializeField] private float moveSpeed;
+    private bool isMoving;
+    [SerializeField] private float movementSpeed;
     [SerializeField] private float speedIncreaseAmount;
 
     [Header("Jump")]
@@ -27,8 +28,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform checkSpherePos;
     [SerializeField] private float checkSphereRadius;
     [SerializeField] private LayerMask groundMask;
-
-
 
     private void Awake()
     {
@@ -51,12 +50,18 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+        if (isMoving)
+        {
+            Moveing();
+        }
         PlayerInputs();
     }
 
     private void FixedUpdate()
     {
+        Vector3 movement = transform.forward * movementSpeed * Time.deltaTime;
+        rb.MovePosition(rb.position + movement);
+
         isGrounded = Physics.CheckSphere(checkSpherePos.position, checkSphereRadius, groundMask);
         animator.SetBool("isGrounded", isGrounded);
     }
@@ -68,12 +73,12 @@ public class PlayerController : MonoBehaviour
 
     public float GetSpeed()
     {
-        return moveSpeed;
+        return movementSpeed;
     }
 
     public void SetSpeed(float speed)
     {
-        moveSpeed = speed;
+        movementSpeed = speed;
     }
 
     private void PlayerInputs()
@@ -92,7 +97,7 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             switch (playerPosition)
             {
@@ -106,41 +111,72 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-        else if ( isGrounded && (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space)))
+        if ( isGrounded && (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space)))
         {
             ChangeAnimationState(CharacterEnums.CharacterState.jump);
 
         }
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             ChangeAnimationState(CharacterEnums.CharacterState.slide);
-        }
-        
+        }    
     }
 
+
+    Vector3 playerPos;
     private void ChangePosition(CharacterEnums.CharacterPosition characterPosition)
     {
-        var playerPos = this.transform.position;
+        playerPos = transform.position;
         playerPosition = characterPosition;
-
-        float targetXPosition = 0f;
 
         switch (playerPosition)
         {
             case CharacterEnums.CharacterPosition.left:
-                targetXPosition = leftPositionValue;
+                playerPos.x = leftPositionValue;
                 break;
             case CharacterEnums.CharacterPosition.middle:
-                targetXPosition = middlePositionValue;
+                playerPos.x = middlePositionValue;
                 break;
             case CharacterEnums.CharacterPosition.right:
-                targetXPosition = rightPositionValue;
+                playerPos.x = rightPositionValue;
                 break;
             default:
                 break;
         }
-        playerPos.x = targetXPosition;
-        this.transform.position = playerPos;
+        isMoving = true;
+    }
+
+    private void Moveing()
+    {
+        float newXPosition = Mathf.Lerp(transform.position.x, playerPos.x, 10 * Time.deltaTime);
+        transform.position = new Vector3(newXPosition, transform.position.y, transform.position.z);
+
+        if (Mathf.Abs(transform.position.x - playerPos.x) <= 0.01f)
+        {
+            isMoving = false;
+        }
+    }
+
+    private IEnumerator Jump()
+    {
+        animator.SetBool("Jump", true);
+        animator.SetBool("Run", false);
+        rb.AddForce(Vector3.up * jumpForce);
+        yield return new WaitForSeconds(0.2f);
+        ChangeAnimationState(CharacterEnums.CharacterState.run);
+    }
+    private IEnumerator Slide()
+    {
+        animator.SetBool("Run", false);
+        animator.SetBool("Slide", true);
+        var velocity = rb.velocity;
+        velocity.y = -15;
+        rb.velocity= velocity;
+        yield return new WaitForSeconds(0.2f);
+        velocity.y = 0;
+        rb.velocity = velocity;
+        animator.SetBool("Slide", false);
+        animator.SetBool("Run", true);
     }
 
     private void ChangeAnimationState(CharacterEnums.CharacterState characterState)
@@ -158,27 +194,22 @@ public class PlayerController : MonoBehaviour
             case CharacterEnums.CharacterState.jump:
                 if (isGrounded)
                 {
-                    rb.AddForce(Vector3.up * jumpForce);
-                    animator.SetBool("Jump", true);
-                    animator.SetBool("Run", false);
+                    StartCoroutine(Jump());
                 }
                 break;
             case CharacterEnums.CharacterState.slide:
-                animator.SetTrigger("Slide");
+                StartCoroutine(Slide());
                 break;
             default:
                 break;
-        }
-        
-        Debug.Log(playerState);
+        } 
     }
 
-    //skor 100 ün katlarýna uþaltýðý zaman hýz, "speedIncreaseAmount" deðeri kadar artar
+    //skor 5 in katlarýna uþaltýðý zaman hýz, "speedIncreaseAmount" deðeri kadar artar
     public void IncreaseSpeed()
     {
-        moveSpeed += speedIncreaseAmount;
+        movementSpeed += speedIncreaseAmount;
     }
-
 } 
 
 public class CharacterEnums

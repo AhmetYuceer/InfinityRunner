@@ -343,7 +343,6 @@ GameObject:
   - component: {fileID: 4194827560693120}
   - component: {fileID: 33696426054016862}
   - component: {fileID: 23868303300934196}
-  - component: {fileID: 64894975738766156}
   m_Layer: 0
   m_Name: SM_Veh_Plane_Stunt_01
   m_TagString: Untagged
@@ -428,20 +427,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64894975738766156
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1300689381462198}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 89cfb46882e163d428cb9f3d79ae2393, type: 3}
 --- !u!1 &1305793217231656
 GameObject:
   m_ObjectHideFlags: 0
