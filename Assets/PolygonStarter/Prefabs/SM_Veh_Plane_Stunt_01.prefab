@@ -343,9 +343,11 @@ GameObject:
   - component: {fileID: 4194827560693120}
   - component: {fileID: 33696426054016862}
   - component: {fileID: 23868303300934196}
+  - component: {fileID: 158452618}
+  - component: {fileID: 1756822578}
   m_Layer: 0
   m_Name: SM_Veh_Plane_Stunt_01
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -427,6 +429,34 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &158452618
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300689381462198}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 14.8279705, y: 2.7771916, z: 6.576745}
+  m_Center: {x: 0, y: 0.2183764, z: 0.8873105}
+--- !u!114 &1756822578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300689381462198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8a15591abe327642a83694510ba6b27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planeStartingPosition: {fileID: 0}
+  planeEndPosition: {fileID: 0}
+  lerpTime: 0.6
 --- !u!1 &1305793217231656
 GameObject:
   m_ObjectHideFlags: 0

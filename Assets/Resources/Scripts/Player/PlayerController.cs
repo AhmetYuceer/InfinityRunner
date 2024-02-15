@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance;
+    private CharacterEnums.CharacterPosition currentPosition;
 
     private const float leftPositionValue = 1.3f;
     private const float middlePositionValue = 3.8f;
@@ -14,20 +15,25 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private Rigidbody rb;
 
-    private CharacterEnums.CharacterPosition playerPosition;
-    private CharacterEnums.CharacterState playerState;
-
-    [Header("Move")]
-    private bool isMoving;
-    [SerializeField] private float movementSpeed;
-    [SerializeField] private float speedIncreaseAmount;
+    [Header("MOVEÝNG")]
+    private float targetX; 
+    public bool isMove;
+    [SerializeField] private bool isHorizontalMove;
+    [SerializeField] private float forwardSpeed;
+    [SerializeField] private float horizontalSpeed;
+    public float backwardMovementDistance;
 
     [Header("Jump")]
-    [SerializeField] private float jumpForce;
     [SerializeField] private bool isGrounded;
-    [SerializeField] private Transform checkSpherePos;
-    [SerializeField] private float checkSphereRadius;
-    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private float jumpForce;
+    
+    [SerializeField] private Transform groundCheckerTransform;
+    [SerializeField] private float checkerRadius;
+    [SerializeField] LayerMask groundLayer;
+
+    [Header("Slide")]
+    [SerializeField] private bool isSlide;
+    [SerializeField] private float slideDelay;
 
     private void Awake()
     {
@@ -39,178 +45,170 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
 
-        playerState = CharacterEnums.CharacterState.run;
-        playerPosition = CharacterEnums.CharacterPosition.middle;
-        ChangePosition(playerPosition);
-        ChangeAnimationState(playerState);
+        currentPosition = CharacterEnums.CharacterPosition.middle;
     }
 
-    void Update()
+    private void Update()
     {
-        if (isMoving)
+        animator.SetBool("Falling", !isGrounded);
+        Inputs();
+        if (isHorizontalMove)
         {
-            Moveing();
+            moveCharacterHorizontally();
         }
-        PlayerInputs();
     }
 
     private void FixedUpdate()
     {
-        Vector3 movement = transform.forward * movementSpeed * Time.deltaTime;
-        rb.MovePosition(rb.position + movement);
+        if (isMove)
+        {
+            isGrounded = Physics.CheckSphere(groundCheckerTransform.position, checkerRadius, groundLayer);
+            moveCharacterForward();
+        }
+    }
 
-        isGrounded = Physics.CheckSphere(checkSpherePos.position, checkSphereRadius, groundMask);
-        animator.SetBool("isGrounded", isGrounded);
+    private void moveCharacterForward()
+    {
+        Vector3 forwardMovement = transform.forward * forwardSpeed * Time.fixedDeltaTime;
+        transform.position += forwardMovement;
+        rb.MovePosition(transform.position);
+    }
+
+    private void moveCharacterHorizontally()
+    {
+        var pos = transform.position;
+
+        pos.x = Mathf.Lerp(pos.x, targetX, horizontalSpeed * Time.fixedDeltaTime);
+
+        transform.position = pos;
+
+        if (Mathf.Abs(pos.x - targetX) < 0.1f)
+        {
+            isHorizontalMove = false;
+            pos.x = targetX;
+            transform.position = pos;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(groundCheckerTransform.position, checkerRadius);
+    }
+
+    private void Inputs()
+    {
+        bool leftInput = Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow);
+        bool rightInput = Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow);
+        bool jumpInput = Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space);
+        bool slideInput = Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow);
+
+        if (leftInput)
+        {
+            ChangeCharacterPosition(CharacterEnums.CharacterPosition.left);
+        }  
+        if (rightInput)
+        {
+            ChangeCharacterPosition(CharacterEnums.CharacterPosition.right);
+        }
+        if (jumpInput && !isSlide)
+        {
+            if (isGrounded)
+            {
+                animator.SetTrigger("Jump");
+                rb.AddForce(Vector3.up * jumpForce);
+            }
+        }
+        if (slideInput && !isSlide)
+        {
+            if (isGrounded)
+            {
+                var velocity = rb.velocity;
+                velocity.y = 0;
+                rb.velocity = velocity;
+                animator.SetTrigger("Slide");
+            }
+            else
+            {
+                var velocity = rb.velocity;
+                velocity.y = -20;
+                rb.velocity = velocity;
+                animator.SetTrigger("Slide");
+            }
+            StartCoroutine(SlideDelay());
+        }
+    }
+ 
+    private IEnumerator SlideDelay()
+    {
+        isSlide = true;
+        yield return new WaitForSeconds(slideDelay);
+        isSlide = false;
+    }
+
+    #region
+   
+    private void ChangeCharacterPosition(CharacterEnums.CharacterPosition _characterPosition)
+    {
+        switch (_characterPosition)
+        {
+            case CharacterEnums.CharacterPosition.left:
+
+                if (currentPosition != _characterPosition)
+                {
+                    if (currentPosition == CharacterEnums.CharacterPosition.middle)
+                    {
+                        currentPosition = CharacterEnums.CharacterPosition.left;
+                        targetX = leftPositionValue;
+                    }
+                    else
+                    {
+                        currentPosition = CharacterEnums.CharacterPosition.middle;
+                        targetX = middlePositionValue;
+                    }
+                    isHorizontalMove = true;
+                }
+                break;
+            case CharacterEnums.CharacterPosition.right:
+
+                if (currentPosition != _characterPosition)
+                {
+                    if (currentPosition == CharacterEnums.CharacterPosition.middle)
+                    {
+                        currentPosition = CharacterEnums.CharacterPosition.right;
+                        targetX = rightPositionValue;
+                    }
+                    else
+                    {
+                        currentPosition = CharacterEnums.CharacterPosition.middle;
+                        targetX = middlePositionValue;
+                    }
+                    isHorizontalMove = true;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    public float GetSpeed()
+    {
+        return forwardSpeed;
+    }    
+    public void SetSpeed(float speed)
+    {
+        forwardSpeed = speed;
     }
 
     public void SetRigidbodyIsKinematic(bool isKinematic)
     {
         rb.isKinematic = isKinematic;
     }
-
-    public float GetSpeed()
-    {
-        return movementSpeed;
-    }
-
-    public void SetSpeed(float speed)
-    {
-        movementSpeed = speed;
-    }
-
-    private void PlayerInputs()
-    {
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            switch (playerPosition)
-            {
-                case CharacterEnums.CharacterPosition.middle:
-                    ChangePosition(CharacterEnums.CharacterPosition.left);
-                    break;
-                case CharacterEnums.CharacterPosition.right:
-                    ChangePosition(CharacterEnums.CharacterPosition.middle);
-                    break;
-                default:
-                    break;
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            switch (playerPosition)
-            {
-                case CharacterEnums.CharacterPosition.left:
-                    ChangePosition(CharacterEnums.CharacterPosition.middle);
-                    break;
-                case CharacterEnums.CharacterPosition.middle:
-                    ChangePosition(CharacterEnums.CharacterPosition.right);
-                    break;  
-                default:
-                    break;
-            }
-        }
-        if ( isGrounded && (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space)))
-        {
-            ChangeAnimationState(CharacterEnums.CharacterState.jump);
-
-        }
-        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            ChangeAnimationState(CharacterEnums.CharacterState.slide);
-        }    
-    }
-
-
-    Vector3 playerPos;
-    private void ChangePosition(CharacterEnums.CharacterPosition characterPosition)
-    {
-        playerPos = transform.position;
-        playerPosition = characterPosition;
-
-        switch (playerPosition)
-        {
-            case CharacterEnums.CharacterPosition.left:
-                playerPos.x = leftPositionValue;
-                break;
-            case CharacterEnums.CharacterPosition.middle:
-                playerPos.x = middlePositionValue;
-                break;
-            case CharacterEnums.CharacterPosition.right:
-                playerPos.x = rightPositionValue;
-                break;
-            default:
-                break;
-        }
-        isMoving = true;
-    }
-
-    private void Moveing()
-    {
-        float newXPosition = Mathf.Lerp(transform.position.x, playerPos.x, 10 * Time.deltaTime);
-        transform.position = new Vector3(newXPosition, transform.position.y, transform.position.z);
-
-        if (Mathf.Abs(transform.position.x - playerPos.x) <= 0.01f)
-        {
-            isMoving = false;
-        }
-    }
-
-    private IEnumerator Jump()
-    {
-        animator.SetBool("Jump", true);
-        animator.SetBool("Run", false);
-        rb.AddForce(Vector3.up * jumpForce);
-        yield return new WaitForSeconds(0.2f);
-        ChangeAnimationState(CharacterEnums.CharacterState.run);
-    }
-    private IEnumerator Slide()
-    {
-        animator.SetBool("Run", false);
-        animator.SetBool("Slide", true);
-        var velocity = rb.velocity;
-        velocity.y = -15;
-        rb.velocity= velocity;
-        yield return new WaitForSeconds(0.2f);
-        velocity.y = 0;
-        rb.velocity = velocity;
-        animator.SetBool("Slide", false);
-        animator.SetBool("Run", true);
-    }
-
-    private void ChangeAnimationState(CharacterEnums.CharacterState characterState)
-    {
-        playerState = characterState;
-        switch (playerState)
-        {
-            case CharacterEnums.CharacterState.idle:
-                //isplay kapat
-                break;
-            case CharacterEnums.CharacterState.run:
-                animator.SetBool("Run", true);
-                animator.SetBool("Jump", false);
-                break;
-            case CharacterEnums.CharacterState.jump:
-                if (isGrounded)
-                {
-                    StartCoroutine(Jump());
-                }
-                break;
-            case CharacterEnums.CharacterState.slide:
-                StartCoroutine(Slide());
-                break;
-            default:
-                break;
-        } 
-    }
-
-    //skor 5 in katlarýna uþaltýðý zaman hýz, "speedIncreaseAmount" deðeri kadar artar
-    public void IncreaseSpeed()
-    {
-        movementSpeed += speedIncreaseAmount;
-    }
-} 
+    #endregion
+}
 
 public class CharacterEnums
 {
@@ -219,12 +217,5 @@ public class CharacterEnums
         left,
         middle,
         right
-    }
-    public enum CharacterState
-    {
-        idle,
-        run,
-        jump,
-        slide
     }
 }

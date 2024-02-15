@@ -27,20 +27,32 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         currentHeartCount = heartCount;
         characterMaterial = CharacterCustomization.Instance.characterMaterial;
-        UIManager.Instance.SetHearts(currentHeartCount); 
+        UIManager.Instance.SetHearts(currentHeartCount);
+        characterMaterial.SetFloat("_Metallic", 0f);
     }
 
-    public void TakeDamage()
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.gameObject.CompareTag("Obstacle"))
+        {
+            TakeDamage();
+        }
+    }
+
+    private void TakeDamage()
     {
         currentHeartCount -= damage;
         UIManager.Instance.SetHearts(currentHeartCount);
         StartCoroutine(AnimateBlink());
 
+        transform.position += Vector3.back * PlayerController.Instance.backwardMovementDistance; 
+
         if (currentHeartCount < 1)
         {
-            SceneManager.LoadScene(0);
+            PlayerController.Instance.isMove = false;
         }
     }
+
     IEnumerator AnimateBlink()
     {
         float characterSpeed = PlayerController.Instance.GetSpeed();
