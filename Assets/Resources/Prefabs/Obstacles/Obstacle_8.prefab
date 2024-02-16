@@ -62,7 +62,7 @@ MonoBehaviour:
   - {fileID: 5686202222583623008}
   - {fileID: 8509057582185073564}
   objectsStartPositions: []
-  speed: 4
+  speed: 10
   isActive: 0
 --- !u!1 &8412335772582548615
 GameObject:

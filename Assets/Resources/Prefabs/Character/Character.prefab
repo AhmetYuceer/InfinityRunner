@@ -2105,8 +2105,8 @@ Rigidbody:
   m_GameObject: {fileID: 3595719656349112287}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0.01
-  m_AngularDrag: 0.05
+  m_Drag: 0
+  m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -2140,11 +2140,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isMove: 1
   isHorizontalMove: 0
-  forwardSpeed: 10
-  horizontalSpeed: 5
-  backwardMovementDistance: 3
+  forwardSpeed: 7
+  upSpeedAmount: 0.001
+  horizontalSpeed: 6
   isGrounded: 0
-  jumpForce: 310
+  jumpForce: 3
   groundCheckerTransform: {fileID: 85221279}
   checkerRadius: 0.3
   groundLayer:

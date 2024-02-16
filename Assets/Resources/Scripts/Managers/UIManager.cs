@@ -104,7 +104,7 @@ public class UIManager : MonoBehaviour
 
         endPanelRectTransform.DOAnchorPosY(endPanelRectTransform.anchoredPosition.y + 415f, 1f)
         .SetEase(Ease.OutBounce);
-
+        currentScoreText.color = Color.black;
         if (checkMaxScore)
         {
             highScoreObjectRectTranform.gameObject.SetActive(true);

@@ -20,8 +20,8 @@ public class PlayerController : MonoBehaviour
     public bool isMove;
     [SerializeField] private bool isHorizontalMove;
     [SerializeField] private float forwardSpeed;
+    [SerializeField] private float upSpeedAmount;
     [SerializeField] private float horizontalSpeed;
-    public float backwardMovementDistance;
 
     [Header("Jump")]
     [SerializeField] private bool isGrounded;
@@ -65,6 +65,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
         animator.SetBool("Falling", !isGrounded);
+ 
+
         Inputs();
         if (isHorizontalMove)
         {
@@ -121,25 +123,16 @@ public class PlayerController : MonoBehaviour
             if (isGrounded)
             {
                 animator.SetTrigger("Jump");
-                rb.AddForce(Vector3.up * jumpForce);
+                rb.AddForce(new Vector3(0.0f, 2.0f, 0.0f) * jumpForce , ForceMode.Impulse);
+                isGrounded = false;
             }
         }
         if (slideInput && !isSlide)
         {
-            if (isGrounded)
-            {
-                var velocity = rb.velocity;
-                velocity.y = 0;
-                rb.velocity = velocity;
-                animator.SetTrigger("Slide");
-            }
-            else
-            {
-                var velocity = rb.velocity;
-                velocity.y = -20;
-                rb.velocity = velocity;
-                animator.SetTrigger("Slide");
-            }
+            var velocity = rb.velocity;
+            velocity.y = -20;
+            rb.velocity = velocity;
+            animator.SetTrigger("Slide");
             StartCoroutine(SlideDelay());
         }
     }
@@ -195,6 +188,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+
+    public void SetIsKinematic(bool isKinematic)
+    {
+        rb.isKinematic = isKinematic;
+    }
+
     public float GetSpeed()
     {
         return forwardSpeed;
@@ -204,11 +204,10 @@ public class PlayerController : MonoBehaviour
         forwardSpeed = speed;
     }
 
-    public void SetRigidbodyIsKinematic(bool isKinematic)
+    public void UpSpeed()
     {
-        rb.isKinematic = isKinematic;
+        forwardSpeed += upSpeedAmount;
     }
-   
 }
 
 public class CharacterEnums

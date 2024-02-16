@@ -27,9 +27,13 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        distance = Vector3.Distance(meterStartingPosition.position, playerTransform.position);
-        currentScore = (int)Mathf.Round(distance);
-        UIManager.Instance.UpdateScoreText(currentScore);
+        if (PlayerController.Instance.isMove)
+        {
+            distance = Vector3.Distance(meterStartingPosition.position, playerTransform.position);
+            currentScore = (int)Mathf.Round(distance) * 2;
+            UIManager.Instance.UpdateScoreText(currentScore);
+            PlayerController.Instance.UpSpeed();
+        }
     }
 
     public void EndGame()

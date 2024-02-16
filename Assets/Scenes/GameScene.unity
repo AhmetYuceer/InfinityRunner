@@ -3873,8 +3873,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Obstacle_7
       objectReference: {fileID: 0}
+    - target: {fileID: 1381174715090861784, guid: 226af0f4c3db83d4f97632804d8a99b7, type: 3}
+      propertyPath: childs.Array.size
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1381174715090861784, guid: 226af0f4c3db83d4f97632804d8a99b7, type: 3}
+      propertyPath: childs.Array.data[9]
+      value: 
+      objectReference: {fileID: 1219690280164549603}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 226af0f4c3db83d4f97632804d8a99b7, type: 3}
+--- !u!1 &1219690280164549603 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6286472837247473451, guid: 226af0f4c3db83d4f97632804d8a99b7, type: 3}
+  m_PrefabInstance: {fileID: 1219690280164549602}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2292389214902682035 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1388282615646529566, guid: 60b30c978d5a59f43a2aa98795bda448, type: 3}
@@ -4020,14 +4033,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3595719655581349898, guid: a1aea8b444599b3469933d393007b816, type: 3}
-      propertyPath: isMove
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3595719655581349898, guid: a1aea8b444599b3469933d393007b816, type: 3}
-      propertyPath: backwardMovementDistance
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3595719656349076479, guid: a1aea8b444599b3469933d393007b816, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -4085,10 +4090,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1527343404}
     m_Modifications:
-    - target: {fileID: 3653886682862038846, guid: 60e51f8c7f986bb48bb9c50c747cdb9e, type: 3}
-      propertyPath: speed
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 8412335772582548615, guid: 60e51f8c7f986bb48bb9c50c747cdb9e, type: 3}
       propertyPath: m_Name
       value: Obstacle_8
@@ -4156,6 +4157,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1527343404}
     m_Modifications:
+    - target: {fileID: 6934983480979457399, guid: aa6bbbcbd5e372541b8ace3d5032d802, type: 3}
+      propertyPath: childs.Array.size
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 6934983480979457399, guid: aa6bbbcbd5e372541b8ace3d5032d802, type: 3}
+      propertyPath: childs.Array.data[15]
+      value: 
+      objectReference: {fileID: 5650343415837513801}
+    - target: {fileID: 6934983480979457399, guid: aa6bbbcbd5e372541b8ace3d5032d802, type: 3}
+      propertyPath: childs.Array.data[16]
+      value: 
+      objectReference: {fileID: 5650343415837513800}
     - target: {fileID: 6934983481668767411, guid: aa6bbbcbd5e372541b8ace3d5032d802, type: 3}
       propertyPath: m_Name
       value: Obstacle_6
@@ -4206,6 +4219,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa6bbbcbd5e372541b8ace3d5032d802, type: 3}
+--- !u!1 &5650343415837513800 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1440832883824142477, guid: aa6bbbcbd5e372541b8ace3d5032d802, type: 3}
+  m_PrefabInstance: {fileID: 5650343415837513799}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5650343415837513801 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2103499162597525906, guid: aa6bbbcbd5e372541b8ace3d5032d802, type: 3}
+  m_PrefabInstance: {fileID: 5650343415837513799}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5761327739587818206
 PrefabInstance:
   m_ObjectHideFlags: 0

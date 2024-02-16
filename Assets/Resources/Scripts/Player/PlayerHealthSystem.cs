@@ -46,8 +46,6 @@ public class PlayerHealthSystem : MonoBehaviour
         UIManager.Instance.SetHearts(currentHeartCount);
         StartCoroutine(AnimateBlink());
 
-        transform.position += Vector3.back * PlayerController.Instance.backwardMovementDistance; 
-
         if (currentHeartCount < 1)
         {
             GameManager.Instance.EndGame();
@@ -58,7 +56,8 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         float characterSpeed = PlayerController.Instance.GetSpeed();
         PlayerController.Instance.SetSpeed(0);
-        PlayerController.Instance.SetRigidbodyIsKinematic(true);
+
+        PlayerController.Instance.SetIsKinematic(true);
 
         float startTime = Time.time;  
         float elapsedTime = 0f;
@@ -74,8 +73,8 @@ public class PlayerHealthSystem : MonoBehaviour
             yield return new WaitForSeconds(blinkSpeed);
         }
 
-        PlayerController.Instance.SetSpeed(characterSpeed);
-        PlayerController.Instance.SetRigidbodyIsKinematic(false);
         characterMaterial.SetFloat("_Metallic", 0f);
+        PlayerController.Instance.SetSpeed(characterSpeed);
+        PlayerController.Instance.SetIsKinematic(false);
     }
 }
