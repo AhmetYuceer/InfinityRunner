@@ -35,6 +35,7 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         if (collision.collider.gameObject.CompareTag("Obstacle"))
         {
+            collision.collider.gameObject.SetActive(false);
             TakeDamage();
         }
     }
@@ -49,7 +50,7 @@ public class PlayerHealthSystem : MonoBehaviour
 
         if (currentHeartCount < 1)
         {
-            PlayerController.Instance.isMove = false;
+            GameManager.Instance.EndGame();
         }
     }
 

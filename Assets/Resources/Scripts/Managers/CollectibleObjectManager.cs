@@ -22,7 +22,16 @@ public class CollectibleObjectManager : MonoBehaviour
         UIManager.Instance.UpdateCoinText(currentCoin);
     }
 
-    public void CollectCoins()
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Coin"))
+        {
+            CollectCoins();
+            other.gameObject.SetActive(false);
+        }
+    }
+
+    private void CollectCoins()
     {
         currentCoin += coinValue;
         UIManager.Instance.UpdateCoinText(currentCoin);

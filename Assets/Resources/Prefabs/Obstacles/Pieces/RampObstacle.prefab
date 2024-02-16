@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6954485217295325805
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7069823838231304158}
+  - component: {fileID: 6266403201275838422}
+  - component: {fileID: 3650512137303475045}
+  m_Layer: 6
+  m_Name: RampObstacle
+  m_TagString: Obstacle
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7069823838231304158
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6954485217295325805}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.86, y: 0, z: 10.13}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8179604866501257078}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6266403201275838422
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6954485217295325805}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.45472717, y: 1.266882, z: 11.948767}
+  m_Center: {x: 0.32128143, y: 0.6292181, z: 2.8805885}
+--- !u!65 &3650512137303475045
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6954485217295325805}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.38750458, y: 0.51122093, z: 1.4618092}
+  m_Center: {x: 0.3062477, y: 0.29733944, z: -3.8099957}
+--- !u!1001 &6016606176615525110
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 7069823838231304158}
+    m_Modifications:
+    - target: {fileID: 2521044069208804736, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521044069208804736, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.4599985
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521044069208804736, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521044069208804736, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4.7752237
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521044069208804736, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521044069208804736, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521044069208804736, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521044069208804736, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521044069208804736, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521044069208804736, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521044069208804736, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2521044069208804737, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+      propertyPath: m_Name
+      value: Ramp
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+--- !u!4 &8179604866501257078 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2521044069208804736, guid: ba7438e24b9d33c41991b7b97095bf20, type: 3}
+  m_PrefabInstance: {fileID: 6016606176615525110}
+  m_PrefabAsset: {fileID: 0}

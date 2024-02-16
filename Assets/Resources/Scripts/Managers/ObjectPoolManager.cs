@@ -9,7 +9,7 @@ public class ObjectPoolManager : MonoBehaviour
     [SerializeField] private List<GameObject> objectPool= new List<GameObject>();
     [SerializeField] private List<GameObject> obstacles = new List<GameObject>();
 
-    private const int startingAreaCount = 4;
+    private const int startingAreaCount = 5;
     private const int distanceBetweenObstacles = 20;
 
     private void Awake()

@@ -47,12 +47,23 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-
+        isMove = false;
         currentPosition = CharacterEnums.CharacterPosition.middle;
+        animator.SetBool("Run", false);
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.W) && !isMove)
+        {
+            UIManager.Instance.DeactivatePressKeyText();
+            isMove = true;
+            animator.SetBool("Run", true);
+        }
+        if (!isMove)
+        {
+            return;
+        }
         animator.SetBool("Falling", !isGrounded);
         Inputs();
         if (isHorizontalMove)
@@ -80,23 +91,14 @@ public class PlayerController : MonoBehaviour
     private void moveCharacterHorizontally()
     {
         var pos = transform.position;
-
         pos.x = Mathf.Lerp(pos.x, targetX, horizontalSpeed * Time.fixedDeltaTime);
-
         transform.position = pos;
-
         if (Mathf.Abs(pos.x - targetX) < 0.1f)
         {
             isHorizontalMove = false;
             pos.x = targetX;
             transform.position = pos;
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(groundCheckerTransform.position, checkerRadius);
     }
 
     private void Inputs()
@@ -149,7 +151,6 @@ public class PlayerController : MonoBehaviour
         isSlide = false;
     }
 
-    #region
    
     private void ChangeCharacterPosition(CharacterEnums.CharacterPosition _characterPosition)
     {
@@ -207,7 +208,7 @@ public class PlayerController : MonoBehaviour
     {
         rb.isKinematic = isKinematic;
     }
-    #endregion
+   
 }
 
 public class CharacterEnums

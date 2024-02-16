@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 4903173184963024}
   - component: {fileID: 33104823485779868}
   - component: {fileID: 23573647223393292}
-  - component: {fileID: 65016126255501838}
-  - component: {fileID: 3982495091975369357}
   m_Layer: 0
   m_Name: SM_PolygonPrototype_Buildings_Floor_1x1_01P
   m_TagString: Untagged
@@ -86,31 +84,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &65016126255501838
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1811686274572396}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.099999994, z: 1.0000001}
-  m_Center: {x: 0.5, y: -0.049999997, z: 0.50000006}
---- !u!114 &3982495091975369357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1811686274572396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9d1442bb2c6d9847b74871d4607bc39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &6920022850842824180
 PrefabInstance:
   m_ObjectHideFlags: 0

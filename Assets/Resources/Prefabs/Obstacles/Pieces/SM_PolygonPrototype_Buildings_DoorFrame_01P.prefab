@@ -10,9 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 6152039711891839043}
   - component: {fileID: 6126498097787366243}
+  - component: {fileID: 7264711695061471729}
+  - component: {fileID: 835783832984528241}
+  - component: {fileID: 4835310776507171150}
   m_Layer: 0
   m_Name: SM_PolygonPrototype_Buildings_DoorFrame_01P
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41,6 +44,45 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6158130741886858253}
   m_Mesh: {fileID: 4300000, guid: 7ce54f0ead747e44e8ca2778de346dd6, type: 3}
+--- !u!65 &7264711695061471729
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6158130741886858253}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.2758636, y: 2.6459439, z: 0.195961}
+  m_Center: {x: 0.6462519, y: 3.5792954, z: 0.08961487}
+--- !u!65 &835783832984528241
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6158130741886858253}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.15619229, y: 2.1238804, z: 0.185009}
+  m_Center: {x: 1.2343329, y: 1.1500151, z: 0.08413887}
+--- !u!65 &4835310776507171150
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6158130741886858253}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.116655454, y: 2.1681023, z: 0.185009}
+  m_Center: {x: 0.06664778, y: 1.1724663, z: 0.08413887}
 --- !u!1 &8558844239238731855
 GameObject:
   m_ObjectHideFlags: 0
@@ -52,7 +94,6 @@ GameObject:
   - component: {fileID: 7477390260695019328}
   - component: {fileID: 8161616797080479291}
   - component: {fileID: 5866933215772960494}
-  - component: {fileID: 694155997352425986}
   m_Layer: 0
   m_Name: SM_PolygonPrototype_Buildings_DoorFrame_01P
   m_TagString: Untagged
@@ -125,20 +166,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &694155997352425986
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8558844239238731855}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 7ce54f0ead747e44e8ca2778de346dd6, type: 3}
 --- !u!1001 &5303330988128606942
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -155,8 +182,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1811686274572396, guid: af1ac26269830d347859c2c45ef72494, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1811686274572396, guid: af1ac26269830d347859c2c45ef72494, type: 3}
       propertyPath: m_TagString
-      value: Obstacle
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 4903173184963024, guid: af1ac26269830d347859c2c45ef72494, type: 3}
       propertyPath: m_RootOrder
@@ -202,28 +233,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 65016126255501838, guid: af1ac26269830d347859c2c45ef72494, type: 3}
-      propertyPath: m_Size.y
-      value: 0.1679291
-      objectReference: {fileID: 0}
-    - target: {fileID: 65016126255501838, guid: af1ac26269830d347859c2c45ef72494, type: 3}
-      propertyPath: m_Size.z
-      value: 1.0432773
-      objectReference: {fileID: 0}
-    - target: {fileID: 65016126255501838, guid: af1ac26269830d347859c2c45ef72494, type: 3}
-      propertyPath: m_Center.y
-      value: -0.028118655
-      objectReference: {fileID: 0}
-    - target: {fileID: 65016126255501838, guid: af1ac26269830d347859c2c45ef72494, type: 3}
-      propertyPath: m_Center.z
-      value: 0.47836137
-      objectReference: {fileID: 0}
     - target: {fileID: 1817633968175114074, guid: af1ac26269830d347859c2c45ef72494, type: 3}
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3982495091975369357, guid: af1ac26269830d347859c2c45ef72494, type: 3}
+    - target: {fileID: 4120159711803436641, guid: af1ac26269830d347859c2c45ef72494, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.07876331
+      objectReference: {fileID: 0}
+    - target: {fileID: 4120159711803436641, guid: af1ac26269830d347859c2c45ef72494, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.08225206
+      objectReference: {fileID: 0}
+    - target: {fileID: 4120159711803436641, guid: af1ac26269830d347859c2c45ef72494, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4120159711803436641, guid: af1ac26269830d347859c2c45ef72494, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4120159711803436641, guid: af1ac26269830d347859c2c45ef72494, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.475
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af1ac26269830d347859c2c45ef72494, type: 3}
 --- !u!4 &5298586149123283726 stripped
 Transform:
