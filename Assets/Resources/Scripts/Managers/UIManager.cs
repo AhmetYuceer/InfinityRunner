@@ -18,7 +18,6 @@ public class UIManager : MonoBehaviour
    
     [Header("UI Effects")]
     [SerializeField] private Image blinkEffectImage;
-    [SerializeField] private RectTransform pressKeyText;
     [SerializeField] private RectTransform highScoreObjectRectTranform;
     private const float blinkDuration = 2f;
     private const float blinkSpeed = 0.2f;
@@ -41,21 +40,16 @@ public class UIManager : MonoBehaviour
     Tween tween;
     private void Start()
     {
-        pressKeyText.gameObject.SetActive(true);
         highScoreObjectRectTranform.gameObject.SetActive(false);
         endPanelRectTransform = endPanelRectTransform.GetComponent<RectTransform>();
         endPanelRectTransform.gameObject.SetActive(false);
         AddButtonListeners();
-
-       tween = pressKeyText.DOScale(new Vector3(0.9f, 0.9f, 0.9f), 1f)
-                        .SetEase(Ease.Linear)
-                        .SetLoops(-1, LoopType.Yoyo);
+ 
     }
  
     public void DeactivatePressKeyText()
     {
         tween.Pause();
-        pressKeyText.gameObject.SetActive(false);
     }
 
     public void SetHearts(int currentHeartCount)

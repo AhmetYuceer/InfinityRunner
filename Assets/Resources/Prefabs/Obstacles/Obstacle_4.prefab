@@ -417,6 +417,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8410737753107845652}
     m_Modifications:
+    - target: {fileID: 6266403201275838422, guid: 909be3ef5141a6741a9c5df740c0e122, type: 3}
+      propertyPath: m_Size.z
+      value: 12.219973
+      objectReference: {fileID: 0}
+    - target: {fileID: 6266403201275838422, guid: 909be3ef5141a6741a9c5df740c0e122, type: 3}
+      propertyPath: m_Center.x
+      value: -0.65004706
+      objectReference: {fileID: 0}
+    - target: {fileID: 6266403201275838422, guid: 909be3ef5141a6741a9c5df740c0e122, type: 3}
+      propertyPath: m_Center.z
+      value: 2.6495495
+      objectReference: {fileID: 0}
     - target: {fileID: 6954485217295325805, guid: 909be3ef5141a6741a9c5df740c0e122, type: 3}
       propertyPath: m_Name
       value: RampObstacle
@@ -469,7 +481,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3650512137303475045, guid: 909be3ef5141a6741a9c5df740c0e122, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 909be3ef5141a6741a9c5df740c0e122, type: 3}
 --- !u!1 &1482945257243814492 stripped
 GameObject:

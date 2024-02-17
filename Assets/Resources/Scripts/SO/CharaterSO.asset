@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: CharacterSO
-  m_EditorClassIdentifier: Assembly-CSharp::CustomizationScriptableObject
+  m_Script: {fileID: 11500000, guid: cbe9eb3b8bacf63469eaaa8c12c5629a, type: 3}
+  m_Name: CharaterSO
+  m_EditorClassIdentifier: 
   male: 0
   female: 0
-  texture: {fileID: 2800000, guid: eac0676553323674aa7d6e8e4d94dec1, type: 3}
+  texture: {fileID: 0}

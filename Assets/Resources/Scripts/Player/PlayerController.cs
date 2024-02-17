@@ -47,9 +47,9 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        isMove = false;
         currentPosition = CharacterEnums.CharacterPosition.middle;
-        animator.SetBool("Run", false);
+        isMove = true;
+        animator.SetBool("Run", true);
     }
 
     private void Update()
