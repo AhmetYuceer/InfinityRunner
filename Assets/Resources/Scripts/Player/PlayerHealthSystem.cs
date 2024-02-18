@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerHealthSystem : MonoBehaviour
 {
@@ -26,7 +25,7 @@ public class PlayerHealthSystem : MonoBehaviour
     private void Start()
     {
         currentHeartCount = heartCount;
-        characterMaterial = CharacterCustomization.Instance.characterMaterial;
+        characterMaterial = PlayerCustomization.Instance.characterMaterial;
         UIManager.Instance.SetHearts(currentHeartCount);
         characterMaterial.SetFloat("_Metallic", 0f);
     }

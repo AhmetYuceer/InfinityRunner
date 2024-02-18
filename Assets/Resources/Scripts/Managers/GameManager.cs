@@ -5,11 +5,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public bool isPlay;
 
     [Header("Distance Meter")]
     private Transform playerTransform;
     private float distance;
     private int currentScore;
+    private int coin;
     [SerializeField] private Transform meterStartingPosition;
 
     private void Awake()
@@ -23,6 +25,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         playerTransform = PlayerController.Instance.gameObject.transform;
+        GameManager.Instance.StartGame();
     }
 
     private void Update()
@@ -36,16 +39,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void StartGame()
+    {
+        isPlay = true;
+        SoundManager.Instance.PlayBackroundMusic();
+    }
+
     public void EndGame()
     {
+        isPlay = false;
         PlayerController.Instance.isMove = false;
-        int maxScore = SaveAndLoad.GetMaxScore();
+        int maxScore = SaveAndLoad.GetScore();
         bool checkMaxScore = false;
+
+        coin = UIManager.Instance.GetCurrentCoin();
 
         if (currentScore > maxScore)
         {
             checkMaxScore = true;
-            SaveAndLoad.SetMaxScore(currentScore);
+            SaveAndLoad.SetScore(currentScore);
             UIManager.Instance.SetMaxScore(currentScore);
             UIManager.Instance.SetCurrentScore(currentScore);
         }
@@ -55,6 +67,7 @@ public class GameManager : MonoBehaviour
             UIManager.Instance.SetCurrentScore(currentScore);
         }
 
+        SaveAndLoad.SetCoin(coin);
         UIManager.Instance.ActivateEndPanel(checkMaxScore);
     }
 }

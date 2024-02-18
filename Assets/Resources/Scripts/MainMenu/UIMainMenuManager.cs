@@ -6,6 +6,8 @@ using TMPro;
 
 public class UIMainMenuManager : MonoBehaviour
 {
+    public static UIMainMenuManager Instance;
+
     [SerializeField] private Animator animator;
     [SerializeField] private Transform character;
     [SerializeField] private Transform cam;
@@ -34,9 +36,13 @@ public class UIMainMenuManager : MonoBehaviour
     [SerializeField] private Transform camSettingsPos;
     [SerializeField] private Transform camExitPos;
 
-    [Header("Customization Panel")]
-    [SerializeField] private TextMeshProUGUI coinText;
-
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(this.gameObject);
+    }
 
     private void Start()
     {
@@ -46,8 +52,6 @@ public class UIMainMenuManager : MonoBehaviour
         settingsPanelRect.gameObject.SetActive(false);
 
         animator = character.GetComponent<Animator>();
-
-        coinText.text = SaveAndLoad.GetCoins().ToString();
 
         #region Buttons Onclick
 
@@ -70,6 +74,7 @@ public class UIMainMenuManager : MonoBehaviour
         });
         backCustomizationButton.onClick.AddListener(() =>
         {
+            UICharacterCustomizationManager.Instance.SaveIndexs();
             BackButton(customizationPanelRect);
         });
         backExitButton.onClick.AddListener(() =>
@@ -78,6 +83,7 @@ public class UIMainMenuManager : MonoBehaviour
         });
         backSettingsButton.onClick.AddListener(() =>
         {
+            UISoundManager.Instance.SaveMusicSliderValue();
             BackButton(settingsPanelRect);
         });
         quitButton.onClick.AddListener(() =>
@@ -86,7 +92,6 @@ public class UIMainMenuManager : MonoBehaviour
         });
         #endregion
     }
-
 
     private void BackButton(RectTransform panelRectTranform)
     {
@@ -109,7 +114,9 @@ public class UIMainMenuManager : MonoBehaviour
         cam.transform.DOMoveZ(5, 3f, false)
             .OnComplete(() =>
             {
-                SceneManager.LoadScene(1);
+                 SceneManager.LoadSceneAsync("GameScene");
+ 
+                //SceneManager.LoadScene(1);
             });
     }
 

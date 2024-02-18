@@ -44,5 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f037c02ef9bcb84aba8407d4e5d22b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hearts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  controlsText: {fileID: 0}
   coinText: {fileID: 0}
   scoreText: {fileID: 0}
+  blinkEffectImage: {fileID: 0}
+  highScoreObjectRectTranform: {fileID: 0}
+  endPanelRectTransform: {fileID: 0}
+  homeButton: {fileID: 0}
+  restartButton: {fileID: 0}
+  maxScoreText: {fileID: 0}
+  currentScoreText: {fileID: 0}

@@ -44,3 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e20bb40159c374c4c8bc0e79e07bf874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlay: 0
+  meterStartingPosition: {fileID: 0}

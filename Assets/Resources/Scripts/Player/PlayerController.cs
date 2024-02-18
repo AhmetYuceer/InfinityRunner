@@ -6,8 +6,8 @@ using UnityEngine.UIElements;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance;
-    private CharacterEnums.CharacterPosition currentPosition;
 
+    private CharacterEnums.CharacterPosition currentPosition;
     private const float leftPositionValue = 1.3f;
     private const float middlePositionValue = 3.8f;
     private const float rightPositionValue = 6.3f;
@@ -48,16 +48,17 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         currentPosition = CharacterEnums.CharacterPosition.middle;
-        isMove = true;
-        animator.SetBool("Run", true);
+
+        isMove = false;
+        animator.SetBool("Run", false);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W) && !isMove)
+        if (Input.anyKey && !isMove && GameManager.Instance.isPlay)
         {
-            UIManager.Instance.DeactivatePressKeyText();
             isMove = true;
+            UIManager.Instance.HideControls();
             animator.SetBool("Run", true);
         }
         if (!isMove)
@@ -65,7 +66,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
         animator.SetBool("Falling", !isGrounded);
- 
 
         Inputs();
         if (isHorizontalMove)
@@ -83,6 +83,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+ 
     private void moveCharacterForward()
     {
         Vector3 forwardMovement = transform.forward * forwardSpeed * Time.fixedDeltaTime;
@@ -129,22 +130,27 @@ public class PlayerController : MonoBehaviour
         }
         if (slideInput && !isSlide)
         {
-            var velocity = rb.velocity;
-            velocity.y = -20;
-            rb.velocity = velocity;
-            animator.SetTrigger("Slide");
             StartCoroutine(SlideDelay());
         }
     }
  
+
     private IEnumerator SlideDelay()
     {
+        rb.mass = 70;
         isSlide = true;
+
+        var velocity = rb.velocity;
+        velocity.y = -20;
+        rb.velocity = velocity;
+
+        animator.SetTrigger("Slide");
         yield return new WaitForSeconds(slideDelay);
         isSlide = false;
+        rb.mass = 1;
     }
 
-   
+
     private void ChangeCharacterPosition(CharacterEnums.CharacterPosition _characterPosition)
     {
         switch (_characterPosition)
@@ -187,8 +193,6 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
-
-
 
     public void SetIsKinematic(bool isKinematic)
     {

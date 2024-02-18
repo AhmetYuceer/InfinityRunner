@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ReturnToPool : MonoBehaviour
 {
-    [SerializeField] List<GameObject> childs = new List<GameObject>();
+    [SerializeField] private List<GameObject> childs = new List<GameObject>();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -17,5 +17,4 @@ public class ReturnToPool : MonoBehaviour
             ObjectPoolManager.Instance.ReturnToPool(this.gameObject);
         }
     }
-
 }

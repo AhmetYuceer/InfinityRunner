@@ -28,6 +28,7 @@ public class CollectibleObjectManager : MonoBehaviour
         {
             CollectCoins();
             other.gameObject.SetActive(false);
+            SoundManager.Instance.PlayCollectCoinEffect();
         }
     }
 

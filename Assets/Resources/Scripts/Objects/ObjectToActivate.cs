@@ -7,13 +7,11 @@ using static UnityEditor.Progress;
 public class ObjectToActivate : MonoBehaviour
 {
     [SerializeField] private List<GameObject> objects = new List<GameObject>();
-    [SerializeField] private List<Vector3> objectsStartPositions = new List<Vector3>();
+    private List<Vector3> objectsStartPositions = new List<Vector3>();
 
     [SerializeField] private float speed;
 
     [SerializeField] private bool isActive;
-
-    int activateObjectCount = 0;
 
     private void Start()
     {
@@ -28,28 +26,25 @@ public class ObjectToActivate : MonoBehaviour
     {
         if (isActive)
         {
-            if (activateObjectCount <= objects.Count)
+            int objectsReachedTargetCount = 0;
+
+            for (int i = 0; i < objects.Count; i++)
             {
-                for (int i = 0; i < objects.Count; i++)
+                var pos = objects[i].transform.localPosition;
+                pos.z = Mathf.MoveTowards(pos.z, transform.localPosition.z, speed * Time.deltaTime);
+                objects[i].transform.localPosition = pos;
+
+                if (Mathf.Approximately(pos.z, transform.localPosition.z))
                 {
-                    var pos = objects[i].transform.localPosition;
-
-                    pos.z = Mathf.MoveTowards(pos.z, transform.localPosition.z, speed * Time.deltaTime);
-
-                    objects[i].transform.localPosition = pos;
-
-                    if (Mathf.Abs(pos.z - transform.localPosition.z) < 0.1f)
-                    {
-                        activateObjectCount++;
-                        objects[i].transform.localPosition = objectsStartPositions[i];
-                        objects[i].SetActive(false);
-                    }
+                    objects[i].SetActive(false);
+                    objectsReachedTargetCount++;
+                    objects[i].transform.localPosition = objectsStartPositions[i];
                 }
             }
-            else
+
+            if (objectsReachedTargetCount == objects.Count)
             {
                 isActive = false;
-                activateObjectCount = 0;
             }
         }
     }
