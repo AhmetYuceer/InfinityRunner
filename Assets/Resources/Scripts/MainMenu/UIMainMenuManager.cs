@@ -115,8 +115,6 @@ public class UIMainMenuManager : MonoBehaviour
             .OnComplete(() =>
             {
                  SceneManager.LoadSceneAsync("GameScene");
- 
-                //SceneManager.LoadScene(1);
             });
     }
 

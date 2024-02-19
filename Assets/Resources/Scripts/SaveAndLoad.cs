@@ -1,6 +1,4 @@
-using System.Data;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class SaveAndLoad
 {
@@ -105,27 +103,27 @@ public class SaveAndLoad
     #endregion
 
 
-    public static void RESTARTScore()
-    {
-        PlayerPrefs.SetInt("SCORE", 0);
-    }
+    //public static void RESTARTScore()
+    //{
+    //    PlayerPrefs.SetInt("SCORE", 0);
+    //}
 
-    public static void RESTARTCoin()
-    {
-        PlayerPrefs.SetInt("COÝN", 0);
-    }
+    //public static void RESTARTCoin()
+    //{
+    //    PlayerPrefs.SetInt("COÝN", 0);
+    //}
 
-    public static void RESTARTRedColor()
-    {
-        PlayerPrefs.SetInt("RED", 0);
-    }
-    public static void RESTARTGrayColor()
-    {
-        PlayerPrefs.SetInt("GRAY", 0);
-    }
-    public static void RESTARTYellowColor()
-    {
-        PlayerPrefs.SetInt("YELLOW", 0);
-    }
+    //public static void RESTARTRedColor()
+    //{
+    //    PlayerPrefs.SetInt("RED", 0);
+    //}
+    //public static void RESTARTGrayColor()
+    //{
+    //    PlayerPrefs.SetInt("GRAY", 0);
+    //}
+    //public static void RESTARTYellowColor()
+    //{
+    //    PlayerPrefs.SetInt("YELLOW", 0);
+    //}
 
 }

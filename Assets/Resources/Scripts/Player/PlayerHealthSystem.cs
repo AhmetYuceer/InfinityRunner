@@ -30,11 +30,12 @@ public class PlayerHealthSystem : MonoBehaviour
         characterMaterial.SetFloat("_Metallic", 0f);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (collision.collider.gameObject.CompareTag("Obstacle"))
+        if (hit.gameObject.CompareTag("Obstacle"))
         {
-            collision.collider.gameObject.SetActive(false);
+            hit.gameObject.SetActive(false);
+            PlayerController.Instance.ReturnToTakeDamagePosition();
             TakeDamage();
         }
     }
@@ -42,9 +43,10 @@ public class PlayerHealthSystem : MonoBehaviour
     private void TakeDamage()
     {
         currentHeartCount -= damage;
+
         UIManager.Instance.SetHearts(currentHeartCount);
         StartCoroutine(AnimateBlink());
-
+    
         if (currentHeartCount < 1)
         {
             GameManager.Instance.EndGame();
@@ -53,13 +55,10 @@ public class PlayerHealthSystem : MonoBehaviour
 
     IEnumerator AnimateBlink()
     {
-        float characterSpeed = PlayerController.Instance.GetSpeed();
-        PlayerController.Instance.SetSpeed(0);
-
-        PlayerController.Instance.SetIsKinematic(true);
-
         float startTime = Time.time;  
         float elapsedTime = 0f;
+
+        PlayerController.Instance.isCanPressKey = false;
 
         while (elapsedTime < duration)
         {
@@ -73,7 +72,6 @@ public class PlayerHealthSystem : MonoBehaviour
         }
 
         characterMaterial.SetFloat("_Metallic", 0f);
-        PlayerController.Instance.SetSpeed(characterSpeed);
-        PlayerController.Instance.SetIsKinematic(false);
+        PlayerController.Instance.isCanPressKey = true;
     }
 }

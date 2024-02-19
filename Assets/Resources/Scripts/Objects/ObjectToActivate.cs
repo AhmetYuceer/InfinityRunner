@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using static UnityEditor.PlayerSettings;
-using static UnityEditor.Progress;
-
+using UnityEngine; 
 public class ObjectToActivate : MonoBehaviour
 {
     [SerializeField] private List<GameObject> objects = new List<GameObject>();

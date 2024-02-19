@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public bool isPlay;
-
+ 
     [Header("Distance Meter")]
     private Transform playerTransform;
     private float distance;
@@ -25,12 +25,12 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         playerTransform = PlayerController.Instance.gameObject.transform;
-        GameManager.Instance.StartGame();
+        isPlay = false;
     }
 
     private void Update()
     {
-        if (PlayerController.Instance.isMove)
+        if (isPlay)
         {
             distance = Vector3.Distance(meterStartingPosition.position, playerTransform.position);
             currentScore = (int)Mathf.Round(distance) * 2;
@@ -43,15 +43,17 @@ public class GameManager : MonoBehaviour
     {
         isPlay = true;
         SoundManager.Instance.PlayBackroundMusic();
+        UIManager.Instance.HideControls();
     }
 
     public void EndGame()
     {
         isPlay = false;
+        PlayerController.Instance.isCanPressKey = false;
         PlayerController.Instance.isMove = false;
+
         int maxScore = SaveAndLoad.GetScore();
         bool checkMaxScore = false;
-
         coin = UIManager.Instance.GetCurrentCoin();
 
         if (currentScore > maxScore)
@@ -69,5 +71,6 @@ public class GameManager : MonoBehaviour
 
         SaveAndLoad.SetCoin(coin);
         UIManager.Instance.ActivateEndPanel(checkMaxScore);
+
     }
 }

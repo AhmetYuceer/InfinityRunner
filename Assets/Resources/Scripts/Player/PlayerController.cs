@@ -1,39 +1,52 @@
+using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+
+public enum CharacterPosition
+{
+    left,
+    middle,
+    right
+}
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance;
 
-    private CharacterEnums.CharacterPosition currentPosition;
+    private CharacterPosition currentCharacterPosition;
     private const float leftPositionValue = 1.3f;
     private const float middlePositionValue = 3.8f;
     private const float rightPositionValue = 6.3f;
+    private const float gravity = -9.81f;
 
     private Animator animator;
-    private Rigidbody rb;
+    private CharacterController characterController;
 
-    [Header("MOVEÝNG")]
-    private float targetX; 
     public bool isMove;
+    private float targetX;
+    [Header("MOVEÝNG")]
     [SerializeField] private bool isHorizontalMove;
     [SerializeField] private float forwardSpeed;
     [SerializeField] private float upSpeedAmount;
     [SerializeField] private float horizontalSpeed;
 
-    [Header("Jump")]
+    [Header("Gravity")]
     [SerializeField] private bool isGrounded;
-    [SerializeField] private float jumpForce;
-    
-    [SerializeField] private Transform groundCheckerTransform;
-    [SerializeField] private float checkerRadius;
-    [SerializeField] LayerMask groundLayer;
+    [SerializeField] private Transform groundChecker;
+    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private LayerMask groundMask;
+    private Vector3 velocity;
+
+    [Header("Jump")]
+    public float jumpHeight = 3f;  
+    [SerializeField] public bool isJump;
+    [SerializeField] private float jumpDelay;
 
     [Header("Slide")]
     [SerializeField] private bool isSlide;
     [SerializeField] private float slideDelay;
+
+    public bool isCanPressKey { get; set;}
 
     private void Awake()
     {
@@ -45,181 +58,205 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        DOTween.Clear(true);
+        characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        currentPosition = CharacterEnums.CharacterPosition.middle;
+
+        currentCharacterPosition = CharacterPosition.middle;
+        targetX = middlePositionValue;
 
         isMove = false;
-        animator.SetBool("Run", false);
+        isCanPressKey = true;
     }
 
     private void Update()
     {
-        if (Input.anyKey && !isMove && GameManager.Instance.isPlay)
+        if (Input.anyKeyDown && !GameManager.Instance.isPlay && isCanPressKey)
         {
             isMove = true;
-            UIManager.Instance.HideControls();
             animator.SetBool("Run", true);
+            GameManager.Instance.StartGame(); 
+            return;
         }
-        if (!isMove)
+
+        if (!isCanPressKey)
         {
             return;
         }
-        animator.SetBool("Falling", !isGrounded);
-
-        Inputs();
-        if (isHorizontalMove)
-        {
-            moveCharacterHorizontally();
-        }
-    }
-
-    private void FixedUpdate()
-    {
+        
+        Gravity();
         if (isMove)
         {
-            isGrounded = Physics.CheckSphere(groundCheckerTransform.position, checkerRadius, groundLayer);
-            moveCharacterForward();
+            PlayerInputs();
+
+            if (isHorizontalMove)
+            {
+                float distanceToTarget = targetX - transform.position.x;
+                Vector3 movement = new Vector3(Mathf.Sign(distanceToTarget) * horizontalSpeed * Time.deltaTime, 0, 0);
+               
+                characterController.Move(movement);
+                if (Mathf.Abs(distanceToTarget) < 0.1f)
+                {
+                    var pos = transform.position;
+                    pos.x = targetX;
+                    transform.position = pos;
+                    isHorizontalMove = false;
+                }
+            }
         }
     }
 
- 
-    private void moveCharacterForward()
-    {
-        Vector3 forwardMovement = transform.forward * forwardSpeed * Time.fixedDeltaTime;
-        transform.position += forwardMovement;
-        rb.MovePosition(transform.position);
-    }
-
-    private void moveCharacterHorizontally()
-    {
-        var pos = transform.position;
-        pos.x = Mathf.Lerp(pos.x, targetX, horizontalSpeed * Time.fixedDeltaTime);
-        transform.position = pos;
-        if (Mathf.Abs(pos.x - targetX) < 0.1f)
-        {
-            isHorizontalMove = false;
-            pos.x = targetX;
-            transform.position = pos;
-        }
-    }
-
-    private void Inputs()
+    private void PlayerInputs()
     {
         bool leftInput = Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow);
         bool rightInput = Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow);
         bool jumpInput = Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space);
         bool slideInput = Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow);
 
+        characterController.Move(new Vector3(0, 0, forwardSpeed) * Time.deltaTime);
+
         if (leftInput)
         {
-            ChangeCharacterPosition(CharacterEnums.CharacterPosition.left);
-        }  
+            ChangeCharacterPositiom(CharacterPosition.left);
+        }
         if (rightInput)
         {
-            ChangeCharacterPosition(CharacterEnums.CharacterPosition.right);
+            ChangeCharacterPositiom(CharacterPosition.right);
         }
-        if (jumpInput && !isSlide)
+        if (jumpInput && !isJump)
         {
-            if (isGrounded)
-            {
-                animator.SetTrigger("Jump");
-                rb.AddForce(new Vector3(0.0f, 2.0f, 0.0f) * jumpForce , ForceMode.Impulse);
-                isGrounded = false;
-            }
+            StartCoroutine(Jump());
         }
         if (slideInput && !isSlide)
         {
-            StartCoroutine(SlideDelay());
+            StartCoroutine(Slide());
         }
     }
- 
 
-    private IEnumerator SlideDelay()
+    private IEnumerator Jump()
     {
-        rb.mass = 70;
-        isSlide = true;
-
-        var velocity = rb.velocity;
-        velocity.y = -20;
-        rb.velocity = velocity;
-
-        animator.SetTrigger("Slide");
-        yield return new WaitForSeconds(slideDelay);
-        isSlide = false;
-        rb.mass = 1;
-    }
-
-
-    private void ChangeCharacterPosition(CharacterEnums.CharacterPosition _characterPosition)
-    {
-        switch (_characterPosition)
+        if (isGrounded)
         {
-            case CharacterEnums.CharacterPosition.left:
-
-                if (currentPosition != _characterPosition)
-                {
-                    if (currentPosition == CharacterEnums.CharacterPosition.middle)
-                    {
-                        currentPosition = CharacterEnums.CharacterPosition.left;
-                        targetX = leftPositionValue;
-                    }
-                    else
-                    {
-                        currentPosition = CharacterEnums.CharacterPosition.middle;
-                        targetX = middlePositionValue;
-                    }
-                    isHorizontalMove = true;
-                }
-                break;
-            case CharacterEnums.CharacterPosition.right:
-
-                if (currentPosition != _characterPosition)
-                {
-                    if (currentPosition == CharacterEnums.CharacterPosition.middle)
-                    {
-                        currentPosition = CharacterEnums.CharacterPosition.right;
-                        targetX = rightPositionValue;
-                    }
-                    else
-                    {
-                        currentPosition = CharacterEnums.CharacterPosition.middle;
-                        targetX = middlePositionValue;
-                    }
-                    isHorizontalMove = true;
-                }
-                break;
-            default:
-                break;
+            isJump = true;
+            animator.SetTrigger("Jump");
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            yield return new WaitForSeconds(jumpDelay);
+            isJump = false;
         }
     }
 
-    public void SetIsKinematic(bool isKinematic)
+    private IEnumerator Slide()
     {
-        rb.isKinematic = isKinematic;
-    }
+        isSlide = true;
+        if (isGrounded)
+        {
+            animator.SetTrigger("Slide");
+        }
+        else
+        {
+            animator.SetTrigger("Slide");
+            velocity.y = -20f;
+        }
+        velocity.y += gravity * Time.deltaTime;
 
-    public float GetSpeed()
-    {
-        return forwardSpeed;
-    }    
-    public void SetSpeed(float speed)
-    {
-        forwardSpeed = speed;
+        yield return new WaitForSeconds(slideDelay);
+
+        isSlide = false;
     }
 
     public void UpSpeed()
     {
         forwardSpeed += upSpeedAmount;
     }
-}
 
-public class CharacterEnums
-{
-    public enum CharacterPosition
+    private void Gravity()
     {
-        left,
-        middle,
-        right
+        isGrounded = Physics.CheckSphere(groundChecker.position, groundDistance, groundMask);
+        animator.SetBool("Falling", !isGrounded);
+
+        if (!isGrounded)
+        {
+            velocity.y += gravity * 2 * Time.deltaTime;
+        }
+        else
+        {
+            velocity.y += gravity * Time.deltaTime;
+            if (velocity.y < 0)
+            {
+                velocity.y = -2f;
+            }
+        }
+        characterController.Move(velocity * Time.deltaTime);
+    }
+
+    private void ChangeCharacterPositiom(CharacterPosition _characterPosition)
+    {
+        switch (_characterPosition)
+        {
+            case CharacterPosition.left:
+
+                if (CheckCharacterPosition(_characterPosition))
+                {
+                    if (currentCharacterPosition == CharacterPosition.middle)
+                    {
+                        currentCharacterPosition = CharacterPosition.left;
+                        targetX = leftPositionValue;
+                    }
+                    else
+                    {
+                        currentCharacterPosition = CharacterPosition.middle;
+                        targetX = middlePositionValue;
+                    }
+                }
+                break;
+            case CharacterPosition.right:
+                if (CheckCharacterPosition(_characterPosition))
+                {
+                    if (currentCharacterPosition == CharacterPosition.left)
+                    {
+                        currentCharacterPosition = CharacterPosition.middle;
+                        targetX = middlePositionValue;
+                    }
+                    else
+                    {
+                        currentCharacterPosition = CharacterPosition.right;
+                        targetX = rightPositionValue;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        isHorizontalMove = true;
+    }
+
+    public void ReturnToTakeDamagePosition()
+    {
+        float targetX = 0;
+        switch (currentCharacterPosition)
+        {
+            case CharacterPosition.left:
+                targetX = leftPositionValue;
+                break;
+            case CharacterPosition.middle:
+                targetX = middlePositionValue;
+                break;
+            case CharacterPosition.right:
+                targetX = rightPositionValue;
+                break;
+        }
+        var pos = transform.position;
+        pos.x = targetX;
+        pos.y = 1f;
+        transform.position = pos;
+    }
+
+    private bool CheckCharacterPosition(CharacterPosition _characterPosition)
+    {
+        if (currentCharacterPosition != _characterPosition)
+        {
+            return true;
+        }
+        return false;
     }
 }

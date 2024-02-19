@@ -44,12 +44,6 @@ public class UICharacterCustomizationManager : MonoBehaviour
 
     private void Start()
     {
-        SaveAndLoad.RESTARTCoin();
-        SaveAndLoad.RESTARTScore();
-        SaveAndLoad.RESTARTRedColor();
-        SaveAndLoad.RESTARTGrayColor();
-        SaveAndLoad.RESTARTYellowColor();
-
         SetPurchasedStatus();
 
         humanBodys = PlayerCustomization.Instance.humanBodys;
